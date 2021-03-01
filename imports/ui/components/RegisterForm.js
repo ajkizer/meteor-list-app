@@ -12,7 +12,7 @@ const RegisterForm = () => {
         if(password !== password2){
             return
         }
-        Accounts.createUser(username, password)
+        Accounts.createUser({username, password})
     }
 
     return (
