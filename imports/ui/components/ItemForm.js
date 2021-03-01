@@ -1,6 +1,8 @@
 import React, {useState} from 'react'
 import {ListsCollection} from '../../db/ListsCollection';
 
+import {Meteor} from 'meteor/meteor';
+
 const ItemForm = ({listId}) => {
     const [text, setText] = useState("");
 
@@ -13,17 +15,7 @@ const ItemForm = ({listId}) => {
         
         const list = ListsCollection.findOne({_id: listId});
 
-        if(!list.items) {
-            list.items = []
-        }
-
-        list.items.push(text);
-
-        ListsCollection.update(listId, {
-            $set: {
-                items: list.items
-            }
-        });
+        Meteor.call('lists.addItem', list._id, text);
 
         setText("");
     }

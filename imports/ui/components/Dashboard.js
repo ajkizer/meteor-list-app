@@ -21,7 +21,7 @@ const Dashboard = () => {
         return ListsCollection.find({ userId: user._id }).fetch()
     }
     )
-    const listcount = useTracker(() => ListsCollection.find({ userId: user._id }).count())
+    const listcount = useTracker(() => ListsCollection.find({$or: [{ userId: user._id }, {sharedWith: user.username}]}).count())
 
     const logout = () => Meteor.logout();
 

@@ -13,12 +13,7 @@ const ListForm = () => {
 
         if(!text) return;
 
-        ListsCollection.insert({
-            name: text.trim(),
-            userId: user._id,
-            createdAt: new Date()
-        });
-
+        Meteor.call('lists.insert', text, user.username)
         setText("");
     }
     return (
