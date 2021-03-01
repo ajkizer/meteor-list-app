@@ -15,7 +15,7 @@ const ItemForm = ({listId}) => {
         
         const list = ListsCollection.findOne({_id: listId});
 
-        Meteor.call('lists.addItem', list._id, text);
+        Meteor.call('lists.addItem', list, text);
 
         setText("");
     }

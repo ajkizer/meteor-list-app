@@ -16,6 +16,7 @@ const ListForm = () => {
         Meteor.call('lists.insert', text, user.username)
         setText("");
     }
+    
     return (
         <form onSubmit={handleSubmit}>
             <input type="text" placeholder="Enter Name of List"  value={text}m onChange={e => setText(e.target.value)}/>
@@ -25,3 +26,4 @@ const ListForm = () => {
 }
 
 export default ListForm
+

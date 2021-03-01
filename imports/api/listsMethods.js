@@ -17,7 +17,6 @@ Meteor.methods({
             createdAt: new Date()
         })
 
-
     },
 
     'lists.remove'(listId) {
@@ -30,23 +29,20 @@ Meteor.methods({
         ListsCollection.remove(listId);
     },
 
-    'lists.addItem'(listId, item) {
-        check(listId, String);
+    'lists.addItem'(list, item) {
         check(item, String);
 
         if(!this.userId) {
             throw new Meteor.Error("Not authorized");
         }
-
-
        
         if(!list.items) {
             list.items = []
         }
 
-        list.items.push(text);
+        list.items.push(item);
 
-        ListsCollection.update(listId, {
+        ListsCollection.update(list._id, {
             $set: {
                 items: list.items
             }
