@@ -10,6 +10,7 @@ const Home = () => {
 
     const handleRegistered = () => toggleRegistered(!isRegistered);
 
+    
     return (
         <div>
             {user && <Redirect to="/dashboard"/>}

@@ -1,5 +1,6 @@
 import React, {useState} from 'react'
 import {Meteor} from 'meteor/meteor';
+import {Accounts} from 'meteor/accounts-base';
 
 const RegisterForm = () => {
     const [username, setUsername] = useState('');
@@ -11,7 +12,7 @@ const RegisterForm = () => {
         if(password !== password2){
             return
         }
-        Meteor.createUser(username, password)
+        Accounts.createUser(username, password)
     }
 
     return (

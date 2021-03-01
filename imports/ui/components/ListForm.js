@@ -1,8 +1,12 @@
 import React, {useState} from 'react'
 import {ListsCollection} from '../../db/ListsCollection';
+import {useTracker} from 'meteor/react-meteor-data';
+import {Meteor} from 'meteor/meteor';
 
 const ListForm = () => {
     const [text, setText] = useState("");
+    const user = useTracker(() => Meteor.user())
+   
 
     const handleSubmit = e => {
         e.preventDefault();
@@ -11,6 +15,7 @@ const ListForm = () => {
 
         ListsCollection.insert({
             name: text.trim(),
+            userId: user._id,
             createdAt: new Date()
         });
 
