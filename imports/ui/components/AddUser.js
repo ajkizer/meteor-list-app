@@ -1,10 +1,12 @@
 import React, {useState} from 'react'
 import {ListsCollection} from '../../db/ListsCollection';
-import {Accounts} from 'meteor/accounts-base';
+
+import {Meteor} from 'meteor/meteor';
 
 const AddUser = ({listId}) => {
     const [text, setText] = useState("");
     const [showAlert, toggleAlert] = useState(false);
+
 
     const handleSubmit = e => {
         e.preventDefault();
@@ -12,24 +14,10 @@ const AddUser = ({listId}) => {
         if(!text) {
             return
         }
-
-        if(!userInfo){
-            return toggleAlert(true);
-        }
         
         const list = ListsCollection.findOne({_id: listId});
 
-        if(!list.items) {
-            list.sharedWith = []
-        }
-
-        list.sharedWith.push(userInfo);
-
-        ListsCollection.update(listId, {
-            $set: {
-                sharedWith: list.sharedWith
-            }
-        });
+        Meteor.call('lists.share', list, text)
 
         setText("");
     }

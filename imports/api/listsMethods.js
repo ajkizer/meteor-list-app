@@ -47,5 +47,27 @@ Meteor.methods({
                 items: list.items
             }
         });
+    },
+
+    'lists.share'(list, shareRequest) {
+        check(shareRequest, String);
+
+        console.log(list);
+        if(!this.userId){
+            throw new Meteor.Error("Not authorized");
+        }
+
+        if(!list.sharedWith){
+            list.sharedWith = []
+        }
+
+        list.sharedWith.push(shareRequest)
+
+        ListsCollection.update(list._id, {
+            $set: {
+                sharedWith: list.sharedWith
+            }
+        })
     }
 })
+

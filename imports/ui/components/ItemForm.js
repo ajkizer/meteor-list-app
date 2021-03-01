@@ -4,6 +4,7 @@ import {ListsCollection} from '../../db/ListsCollection';
 import {Meteor} from 'meteor/meteor';
 
 const ItemForm = ({listId}) => {
+   
     const [text, setText] = useState("");
 
     const handleSubmit = e => {
@@ -14,9 +15,8 @@ const ItemForm = ({listId}) => {
         }
         
         const list = ListsCollection.findOne({_id: listId});
-
+       
         Meteor.call('lists.addItem', list, text);
-
         setText("");
     }
     return (

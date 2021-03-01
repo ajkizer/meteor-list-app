@@ -18,7 +18,7 @@ const Dashboard = () => {
         if (!user) {
             return []
         }
-        return ListsCollection.find({ userId: user._id }).fetch()
+        return ListsCollection.find({ $or: [{userId: user._id }, {sharedWith: user.username}]}).fetch()
     }
     )
     const listcount = useTracker(() => ListsCollection.find({$or: [{ userId: user._id }, {sharedWith: user.username}]}).count())
