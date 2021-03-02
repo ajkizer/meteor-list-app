@@ -139,6 +139,13 @@ Meteor.methods({
                 sharedWith: newShared
             }
         })
+    },
+
+    'lists.remove'(listId) {
+        check(listId, String);
+        
+
+        ListsCollection.remove({_id: listId})
     }
 })
 

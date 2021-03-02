@@ -1,9 +1,14 @@
 import React from 'react'
 import AddUser from './AddUser'
 import ItemForm from './ItemForm'
+import { Meteor } from 'meteor/meteor';
 const List = ({ list, isOwner }) => {
+
+    const handleRemove = e => isOwner && Meteor.call("lists.remove", list._id)
+
     return (
         <div className="list">
+            {isOwner && <p className="align-right" onClick={handleRemove}>x</p>}
             {isOwner && <AddUser listId={list._id} />}
 
 
