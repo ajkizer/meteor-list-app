@@ -5,6 +5,10 @@ import {Accounts} from 'meteor/accounts-base';
 const RegisterForm = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [email, setEmail] = useState("");
+    const [profile, setProfile] = useState({
+      shareCode: "000000"
+    })
     const [password2, setPassword2] = useState("");
 
     const submit = e => {
@@ -12,7 +16,8 @@ const RegisterForm = () => {
         if(password !== password2){
             return
         }
-        Accounts.createUser({username, password})
+
+        Accounts.createUser({username, password, email, profile})
     }
 
     return (
@@ -41,6 +46,14 @@ const RegisterForm = () => {
 
       <input type="password" placeholder="Confirm Password" name="password2" required onChange={e => setPassword2(e.target.value)}/>
 
+      <label htmlFor="shareCode">Share Code</label>
+      <input
+        type="text"
+        placeholder="Share code"
+        name="shareCode"
+        required
+        onChange={e => setProfile({...profile, shareCode: e.target.value})}
+      />
       <button type="submit">Log In</button>
     </form>
     )

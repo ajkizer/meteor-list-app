@@ -4,6 +4,7 @@ import { Meteor } from 'meteor/meteor';
 import { ListsCollection } from '../../db/ListsCollection';
 import ListForm from './ListForm';
 import List from './List';
+import ListApproval from './ListApproval'
 import { Redirect } from 'react-router-dom'
 
 const Dashboard = () => {
@@ -14,16 +15,36 @@ const Dashboard = () => {
         window.location.href = "/"
     }
 
-    const lists = useTracker(() => {
+    const myLists = useTracker(() => {
         if (!user) {
             return []
         }
-        return ListsCollection.find({ $or: [{userId: user._id }, {sharedWith: user.username}]}).fetch()
+        return ListsCollection.find({userId: user._id }).fetch()
     }
     )
-    const listcount = useTracker(() => ListsCollection.find({$or: [{ userId: user._id }, {sharedWith: user.username}]}).count())
 
+
+
+    const sharedNotifications = useTracker(() => {
+        if(!user){
+            return []
+        }
+        return ListsCollection.find({sharedWith: user.username}).fetch();
+    })
+
+    const sharedLists = useTracker(() => {
+        if(!user) {
+            return []
+        }
+
+        return ListsCollection.find({acceptedShare: user.username})
+    })
+
+    const myListCount = useTracker(() => ListsCollection.find({ userId: user._id }).count())
+    const sharedNotificationsCount = useTracker(() => ListsCollection.find({sharedWith: user.username}).count());
+    const sharedListsCount = useTracker(() => ListsCollection.find({acceptedShare: user.username}).count())
     const logout = () => Meteor.logout();
+    
 
     return (
         <div>
@@ -32,9 +53,19 @@ const Dashboard = () => {
             </div>
             <ListForm />
             {!user && <Redirect to="/" />}
-            <h1>There are currently {listcount} lists</h1>
-            {lists.map(list => <List key={list._id} list={list} />)}
-
+            <div>
+            <h2>There are currently {myListCount} lists that you have created</h2>
+            {myLists.map(list => <List key={list._id} list={list} isOwner={true}
+            />)}
+            </div>
+            <div>
+                <h2>There are currently {sharedListsCount} lists you share with other users</h2>
+                {sharedLists.map(list => <List key={list._id} list={list}/>)}
+            </div>
+            <div>
+                <h2>There are currently {sharedNotificationsCount} lists awaiting your approval</h2>
+                {sharedNotifications.map(list => <ListApproval  key={list._id} list={list}/>)}
+            </div>
         </div>
     )
 }

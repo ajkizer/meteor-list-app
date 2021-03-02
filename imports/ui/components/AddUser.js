@@ -7,7 +7,6 @@ const AddUser = ({listId}) => {
     const [text, setText] = useState("");
     const [showAlert, toggleAlert] = useState(false);
 
-
     const handleSubmit = e => {
         e.preventDefault();
 
