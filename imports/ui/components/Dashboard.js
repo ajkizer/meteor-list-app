@@ -2,10 +2,8 @@ import React from 'react'
 import { useTracker } from 'meteor/react-meteor-data';
 import { Meteor } from 'meteor/meteor';
 import { ListsCollection } from '../../db/ListsCollection';
-import ListForm from './ListForm';
-import List from './List';
-import ListApproval from './ListApproval'
-import { Redirect } from 'react-router-dom'
+import {Card} from 'react-bootstrap';
+import {Link} from 'react-router-dom'
 
 const Dashboard = () => {
 
@@ -23,8 +21,6 @@ const Dashboard = () => {
     }
     )
 
-
-
     const sharedNotifications = useTracker(() => {
         if(!user){
             return []
@@ -37,32 +33,29 @@ const Dashboard = () => {
             return []
         }
 
-        return ListsCollection.find({acceptedShare: user.username})
+        return ListsCollection.find({acceptedShare: user.username}).fetch();
     })
 
     const myListCount = useTracker(() => ListsCollection.find({ userId: user._id }).count())
     const sharedNotificationsCount = useTracker(() => ListsCollection.find({sharedWith: user.username}).count());
     const sharedListsCount = useTracker(() => ListsCollection.find({acceptedShare: user.username}).count())
-    const logout = () => Meteor.logout();
+ 
+
+    console.log(myLists);
     
 
     return (
         <div>
-            <ListForm />
-            {!user && <Redirect to="/" />}
-            <div>
-            <h2>There are currently {myListCount} lists that you have created</h2>
-            {myLists.map(list => <List key={list._id} list={list} isOwner={true}
-            />)}
-            </div>
-            <div>
-                <h2>There are currently {sharedListsCount} lists you share with other users</h2>
-                {sharedLists.map(list => <List key={list._id} list={list}/>)}
-            </div>
-            <div>
-                <h2>There are currently {sharedNotificationsCount} lists awaiting your approval</h2>
-                {sharedNotifications.map(list => <ListApproval  key={list._id} list={list}/>)}
-            </div>
+            <Card>
+            <h3>My Lists ({myListCount})</h3>
+            <ul>
+                {myLists.map(list => <li key={list._id}><Link to={`/dashboard/${list._id}`}>{list.name}</Link></li>)}
+            </ul>
+            <h3>Shared Lists ({sharedListsCount})</h3>
+            <ul>
+                {sharedLists.map(list => <li key={list._id}><Link to={`/dashboard/${list._id}`}>{list.name}</Link></li>)}
+            </ul>
+            </Card>
         </div>
     )
 }

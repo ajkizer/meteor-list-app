@@ -4,23 +4,24 @@ import ItemForm from './ItemForm'
 import { Meteor } from 'meteor/meteor';
 
 import {Card} from 'react-bootstrap';
-const List = ({ list, isOwner }) => {
+const List = ({ currentList, isOwner = true }) => {
+    console.log(currentList)
 
-    const handleRemove = e => isOwner && Meteor.call("lists.remove", list._id)
-    const handleToggleComplete = item => Meteor.call("lists.toggleComplete", list, item)
+    const handleRemove = e => isOwner && Meteor.call("lists.remove", currentList._id)
+    const handleToggleComplete = item => Meteor.call("lists.toggleComplete", currentList, item)
 
     return (
         <Card>
             {isOwner && <p className="align-right" onClick={handleRemove}>x</p>}
-            {isOwner && <AddUser listId={list._id} />}
+            {isOwner && <AddUser listId={currentList._id} />}
 
 
-            <h3>{list.name || list._id} created by: {list.creatorName}</h3>
-            {isOwner && <small><em>shared with: {list.acceptedShare && list.acceptedShare.length && list.acceptedShare.map(user => user) || "nobody"}</em></small>}
+            <h3>{currentList.name || currentList._id} created by: {currentList.creatorName}</h3>
+            {isOwner && <small><em>shared with: {currentList.acceptedShare && currentList.acceptedShare.length && currentList.acceptedShare.map(user => user) || "nobody"}</em></small>}
 
-            {list.items && list.items.map((item, index) => <p key={index + "index"} onClick={() => handleToggleComplete(item)}>{item.text} {item.isComplete && "complete"}
+            {currentList.items && currentList.items.map((item, index) => <p key={index + "index"} onClick={() => handleToggleComplete(item)}>{item.text} {item.isComplete && "complete"}
             </p>)}
-            <ItemForm listId={list._id} />
+            <ItemForm listId={currentList._id} />
         </Card>
     )
 }
