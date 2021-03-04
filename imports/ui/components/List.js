@@ -2,13 +2,15 @@ import React from 'react'
 import AddUser from './AddUser'
 import ItemForm from './ItemForm'
 import { Meteor } from 'meteor/meteor';
+
+import {Card} from 'react-bootstrap';
 const List = ({ list, isOwner }) => {
 
     const handleRemove = e => isOwner && Meteor.call("lists.remove", list._id)
     const handleToggleComplete = item => Meteor.call("lists.toggleComplete", list, item)
 
     return (
-        <div className="list">
+        <Card>
             {isOwner && <p className="align-right" onClick={handleRemove}>x</p>}
             {isOwner && <AddUser listId={list._id} />}
 
@@ -19,7 +21,7 @@ const List = ({ list, isOwner }) => {
             {list.items && list.items.map((item, index) => <p key={index + "index"} onClick={() => handleToggleComplete(item)}>{item.text} {item.isComplete && "complete"}
             </p>)}
             <ItemForm listId={list._id} />
-        </div>
+        </Card>
     )
 }
 

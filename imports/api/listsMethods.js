@@ -55,8 +55,6 @@ Meteor.methods({
 
         list.items.push(item);
 
-        console.log(item);
-
         ListsCollection.update(list._id, {
             $set: {
                 items: list.items

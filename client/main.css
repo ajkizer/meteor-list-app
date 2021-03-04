@@ -3,11 +3,6 @@ body {
   font-family: sans-serif;
 }
 
-.list{
-  border: 1px solid black;
-  width: 50%;
-  margin: 1rem 0;
-}
 
 .align-right{
   text-align: right

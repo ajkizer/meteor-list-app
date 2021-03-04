@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React,{useState, useEffect} from 'react'
 import Login from './LoginForm'
 import Register from './RegisterForm';
 import {useTracker} from 'meteor/react-meteor-data';
@@ -7,6 +7,7 @@ import {Redirect} from 'react-router-dom'
 const Home = () => {
     const [isRegistered, toggleRegistered] = useState(false);
     const user = useTracker(() => Meteor.user())
+
 
     const handleRegistered = () => toggleRegistered(!isRegistered);
 

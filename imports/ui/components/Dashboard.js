@@ -48,9 +48,6 @@ const Dashboard = () => {
 
     return (
         <div>
-            <div className="user" onClick={logout}>
-                {user.username} 🚪
-            </div>
             <ListForm />
             {!user && <Redirect to="/" />}
             <div>
