@@ -10,13 +10,13 @@ const ListPage = () => {
     const params = useParams();
     const user = useTracker(() => Meteor.user())
     const currentList = useTracker(() => ListsCollection.findOne({_id: params.id}))
-    const isOwner = user._id === currentList.userId
+   
     
     console.log(params.id)
     return (
         <div>
             hello
-            <List currentList={currentList} isOwner={isOwner}/>
+            <List id={params.id} />
         </div>
     )
 }
