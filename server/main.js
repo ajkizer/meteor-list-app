@@ -1,11 +1,10 @@
-import { Meteor } from 'meteor/meteor';
+
 import {Accounts} from 'meteor/accounts-base'
 import {ListsCollection} from '../imports/db/ListsCollection';
 import '../imports/api/listsMethods';
 
 
-
-const insertList = (listInfo, user) => ListsCollection.insert({name: listInfo, userId: user._id, createdAt: new Date()})
+const insertList = (name, user, id) => ListsCollection.insert({ name, userId: user._id, createdAt: new Date()})
 
 Meteor.startup(() => {
   if(!Accounts.findUserByUsername('admin')){

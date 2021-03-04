@@ -1,9 +1,11 @@
 import {check} from 'meteor/check';
 import {ListsCollection} from '../db/ListsCollection';
+import {Mongo} from 'meteor/mongo'
 
 Meteor.methods({
-    'lists.insert'(text, username) {
+    'lists.insert'(text, username, type = "checklist", ) {
         check(text, String);
+
 
 
         if(!this.userId) {
@@ -13,10 +15,12 @@ Meteor.methods({
         ListsCollection.insert({
             name: text.trim(),
             userId: this.userId,
+            type: type,
+            items: [],
+            completedItems: [],
             creatorName: username,
             createdAt: new Date()
         })
-
     },
 
     'lists.remove'(listId) {
@@ -29,8 +33,8 @@ Meteor.methods({
         ListsCollection.remove(listId);
     },
 
-    'lists.addItem'(list, item) {
-        check(item, String);
+    'lists.addItem'(list, text) {
+        check(text, String);
 
         if(!this.userId) {
             throw new Meteor.Error("Not authorized");
@@ -40,13 +44,45 @@ Meteor.methods({
             list.items = []
         }
 
+
+
+        const item = {
+            text,
+            isComplete: false
+        }
+
+        item._id = new Mongo.ObjectID()
+
         list.items.push(item);
+
+        console.log(item);
 
         ListsCollection.update(list._id, {
             $set: {
                 items: list.items
             }
         });
+    },
+
+    'lists.toggleComplete'(list, item) {
+        if(!item){
+            return
+        }
+
+        list.items.forEach(val => {
+            if(val._id.toString() === item._id.toString()){
+                val.isComplete = !val.isComplete
+                console.log("match!")
+            }
+
+            
+        });
+
+
+
+        ListsCollection.update(list._id, {
+            $set: {items: list.items}
+        })
     },
 
     'lists.share'(list, shareRequest) {
