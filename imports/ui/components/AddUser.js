@@ -1,20 +1,22 @@
-import React, {useState} from 'react'
-import {ListsCollection} from '../../db/ListsCollection';
+import React, { useState } from 'react'
+import { ListsCollection } from '../../db/ListsCollection';
+import { Col, Row, Button, Form } from 'react-bootstrap';
 
-import {Meteor} from 'meteor/meteor';
 
-const AddUser = ({listId}) => {
+import { Meteor } from 'meteor/meteor';
+
+const AddUser = ({ listId }) => {
     const [text, setText] = useState("");
     const [showAlert, toggleAlert] = useState(false);
 
     const handleSubmit = e => {
         e.preventDefault();
 
-        if(!text) {
+        if (!text) {
             return
         }
-        
-        const list = ListsCollection.findOne({_id: listId});
+
+        const list = ListsCollection.findOne({ _id: listId });
 
         Meteor.call('lists.share', list, text)
 
@@ -22,11 +24,18 @@ const AddUser = ({listId}) => {
     }
 
     return (
-        <form onSubmit={handleSubmit}>
-            {showAlert && <div>User Not Found</div>}
-            <input type="text" placeholder="Enter Name of Item"  value={text} onChange={e => setText(e.target.value)}/>
-            <button type="submit">Add User</button>
-        </form>
+
+        <Form onSubmit={handleSubmit}>
+            <Row>
+                <Col xs={{ span: 8 }} className="pr-0">
+                    <Form.Control type="text" placeholder="Enter username" value={text} onChange={e => setText(e.target.value)} />
+                </Col>
+                <Col>
+                    <Button type="submit">Share</Button>
+                </Col>
+            </Row>
+        </Form>
+
     )
 }
 

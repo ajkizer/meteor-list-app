@@ -19,7 +19,7 @@ export const App = () => {
   return (
     <Router>
       <Navigation />
-      <Container fluid>
+      <Container>
         <Route exact path="/" component={Home} />
         <Route exact path="/dashboard"><Dashboard user={user} /></Route>
         <Route exact path="/dashboard/:id"><ListPage /></Route>

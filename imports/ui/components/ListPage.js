@@ -8,14 +8,11 @@ import { ListsCollection } from '../../db/ListsCollection';
 const ListPage = () => {
     console.log("hello")
     const params = useParams();
-    const user = useTracker(() => Meteor.user())
-    const currentList = useTracker(() => ListsCollection.findOne({_id: params.id}))
    
-    
     console.log(params.id)
     return (
-        <div>
-            hello
+        <div className="p-4">
+          
             <List id={params.id} />
         </div>
     )

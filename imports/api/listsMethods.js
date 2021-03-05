@@ -48,7 +48,8 @@ Meteor.methods({
 
         const item = {
             text,
-            isComplete: false
+            isComplete: false,
+            createdAt: new Date()
         }
 
         item._id = new Mongo.ObjectID()
