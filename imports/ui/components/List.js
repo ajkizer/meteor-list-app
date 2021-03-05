@@ -17,7 +17,7 @@ const List = ({ id }) => {
 
 
     return (
-        <Card className="effect3 p-4">
+        <Card className="effect5 p-4">
             {currentList &&
                 <Col>
 

@@ -8,6 +8,7 @@ import { Meteor } from 'meteor/meteor';
 const AddUser = ({ listId }) => {
     const [text, setText] = useState("");
     const [showAlert, toggleAlert] = useState(false);
+    const [showShare, toggleShare] = useState(false);
 
     const handleSubmit = e => {
         e.preventDefault();
@@ -27,11 +28,12 @@ const AddUser = ({ listId }) => {
 
         <Form onSubmit={handleSubmit}>
             <Row>
+
                 <Col xs={{ span: 8 }} className="pr-0">
-                    <Form.Control type="text" placeholder="Enter username" value={text} onChange={e => setText(e.target.value)} />
+                    <Form.Control type="text" className="grow" placeholder="Enter username" value={text} onChange={e => setText(e.target.value)} />
                 </Col>
-                <Col>
-                    <Button type="submit">Share</Button>
+                <Col xs={{ span: 4 }}>
+                    <Button type="submit">Share</Button> :
                 </Col>
             </Row>
         </Form>
