@@ -12,11 +12,13 @@ import Navigation from './components/Navigation';
 import { Container } from 'react-bootstrap';
 import ListPage from './components/ListPage';
 
+import { useAccount } from '../ui/hooks/accounts';
+
 
 
 export const App = () => {
   const ComingSoon = () => <div>Coming Soon!</div>
-  const user = useTracker(() => Meteor.user())
+  const { user, isLoggedIn } = useAccount();
   return (
     <Router>
       <Navigation />
