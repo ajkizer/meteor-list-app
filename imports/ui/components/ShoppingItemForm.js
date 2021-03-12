@@ -33,15 +33,18 @@ const ShoppingItemForm = ({ listId }) => {
     const increase = () => {
         setItem({...item, quantity: item.quantity + 1})
     }
+    
     return (
         <form onSubmit={handleSubmit}>
             <Row>
 
                 <Col xs={{ span: 4 }} className="pr-0">
                     <Form.Control type="text" className="grow" placeholder="Enter name" value={item.name} onChange={e => setItem({...item, name: e.target.value})} />
+                        <Row>
                     <Button pill disabled={item.quantity === 1} onClick={decrease}>-</Button>
                     <p>{item.quantity}</p>
                     <Button onClick={increase} pill>+</Button>
+                    </Row>
                 </Col>
                 <Col xs={{ span: 3 }}>
                     <Button variant="info" type="submit">Add Item</Button>

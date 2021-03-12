@@ -60,7 +60,9 @@ Meteor.methods({
             newItem = {
                 name: item.name,
                 quantity: item.quantity,
-                retrieved: false
+                retrieved: false,
+                _id: new Mongo.ObjectID(),
+                createdAt: new Date()
             }
         }
 
@@ -70,7 +72,9 @@ Meteor.methods({
             check(item.isComplete, Boolean);
             
             newItem = {
-                title: item.title,
+                title: item.title, 
+                _id: new Mongo.ObjectID(),
+                createdAt: new Date()
             }
         }
         
@@ -85,12 +89,13 @@ Meteor.methods({
                 location: item.location,
                 contactInfo: item.contactInfo,
                 start: item.start,
-                end: item.end
+                end: item.end,
+                _id: new Mongo.ObjectID(),
+                createdAt: new Date()
             }
         }
 
-        newItem._id = new Mongo.ObjectID()
-        newItem.createdAt = new Date()
+     
 
         if(list.type === "shoppingList") {
             createGroceryObj()
@@ -125,7 +130,7 @@ Meteor.methods({
             return
         }
 
-        list.taskList.forEach(val => {
+        list[list.type].forEach(val => {
             if(val._id.toString() === task._id.toString()){
                 val.isComplete = !val.isComplete
             }
@@ -144,6 +149,12 @@ Meteor.methods({
                 val.retrieved = !val.retrieved
             }
         });
+
+        ListsCollection.update(list._id, {
+            $set: {
+                shoppingList: list.shoppingList
+            }
+        })
     },
 
     

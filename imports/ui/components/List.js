@@ -11,7 +11,8 @@ const List = ({ id }) => {
 
 
     const handleRemove = e => Meteor.call("lists.remove", currentList._id)
-    const handleToggleComplete = item => Meteor.call("lists.toggleComplete", currentList, item)
+
+    const handleToggleRetrieved = item => Meteor.call("lists.toggleItemRetrieved", currentList, item)
 
     console.log(currentList);
 
@@ -34,11 +35,10 @@ const List = ({ id }) => {
                         <Col>
 
                             <small><em>shared with: {currentList.acceptedShare && currentList.acceptedShare.length && currentList.acceptedShare.map(user => user) || "nobody"}</em></small>
-                            <ul>{currentList && currentList[currentList.type].map(item => <li onClick={handleToggleComplete}>{item.name}</li>)}</ul>
+                            <ul>{currentList && currentList[currentList.type].map(item => <li onClick={() => handleToggleRetrieved(item)} className={item.retrieved && "complete"}>{item.name}</li>)}</ul>
 
                         </Col>
                         {currentList.type === "shoppingList" && <ShoppingItemForm listId={currentList._id} />}
-
                     </Col>}
             </Card ></>}
            

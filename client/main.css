@@ -43,7 +43,7 @@ body {
   left: auto;
 }
 
-.completed {
+.complete {
   text-decoration: line-through;
   opacity: .6;
   color: green;
