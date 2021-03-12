@@ -17,7 +17,7 @@ const List = ({ id }) => {
 
     return (
         <>
-            <Row>
+        {currentList && <> <Row>
                 <Col md={{ span: 4 }} className="pr-0">
                     <h2>{currentList.name}</h2>
                 </Col>
@@ -34,12 +34,14 @@ const List = ({ id }) => {
                         <Col>
 
                             <small><em>shared with: {currentList.acceptedShare && currentList.acceptedShare.length && currentList.acceptedShare.map(user => user) || "nobody"}</em></small>
-                            <p>{currentList.type}</p>
+                            <ul>{currentList && currentList[currentList.type].map(item => <li onClick={handleToggleComplete}>{item.name}</li>)}</ul>
+
                         </Col>
                         {currentList.type === "shoppingList" && <ShoppingItemForm listId={currentList._id} />}
 
                     </Col>}
-            </Card >
+            </Card ></>}
+           
         </>
     )
 }
