@@ -1,6 +1,6 @@
 import React from 'react'
 import AddUser from './AddUser'
-import ItemForm from './ItemForm'
+import ShoppingItemForm from './ShoppingItemForm'
 import { Meteor } from 'meteor/meteor';
 import { useTracker } from 'meteor/react-meteor-data';
 import { ListsCollection } from '../../db/ListsCollection';
@@ -13,6 +13,7 @@ const List = ({ id }) => {
     const handleRemove = e => Meteor.call("lists.remove", currentList._id)
     const handleToggleComplete = item => Meteor.call("lists.toggleComplete", currentList, item)
 
+    console.log(currentList);
 
     return (
         <>
@@ -34,10 +35,8 @@ const List = ({ id }) => {
 
                             <small><em>shared with: {currentList.acceptedShare && currentList.acceptedShare.length && currentList.acceptedShare.map(user => user) || "nobody"}</em></small>
                             <p>{currentList.type}</p>
-                            {/* {currentList.items && currentList.items.map((item, index) => <p key={index + "index"} className={`${item.isComplete && "completed"} item`} onClick={() => handleToggleComplete(item)}>{item.text}
-                            </p>)} */}
                         </Col>
-                        <ItemForm listId={currentList._id} />
+                        {currentList.type === "shoppingList" && <ShoppingItemForm listId={currentList._id} />}
 
                     </Col>}
             </Card >

@@ -42,7 +42,7 @@ Meteor.methods({
     },
 
     'lists.addItem'(list, item) {
-        check(item.text, String);
+        check(item.name, String);
 
         if(!this.userId) {
             throw new Meteor.Error("Not authorized");
