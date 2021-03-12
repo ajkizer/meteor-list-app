@@ -4,7 +4,7 @@ import {ListsCollection} from '../imports/db/ListsCollection';
 import '../imports/api/listsMethods';
 
 
-const insertList = (name, user, id) => ListsCollection.insert({ name, userId: user._id, createdAt: new Date()})
+const insertList = (name, user, id) => ListsCollection.insert({ name, userId: user._id, type="", sharedWith=[], pendingApproval=[], hiddenBy=[], createdAt: new Date()})
 
 Meteor.startup(() => {
   if(!Accounts.findUserByUsername('admin')){

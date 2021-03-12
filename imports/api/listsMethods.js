@@ -3,7 +3,7 @@ import {ListsCollection} from '../db/ListsCollection';
 import {Mongo} from 'meteor/mongo'
 
 Meteor.methods({
-    'lists.insert'(text, username, type = "checklist", ) {
+    'lists.insert'(text, username, type = "shoppingList" ) {
         check(text, String);
 
 
@@ -12,11 +12,19 @@ Meteor.methods({
             throw new Meteor.Error("Not authorized")
         }
 
+        //when adding users to the DB, sharedWith is the list of people who have
+        //accepted the share request.  Pending is where the requests live.
+
         ListsCollection.insert({
             name: text.trim(),
             userId: this.userId,
             type: type,
-            items: [],
+            sharedWith: [],
+            pendingApproval: [],
+            hiddenBy: [],
+            appointmentList: [],
+            shoppingList: [],
+            taskList: [],
             completedItems: [],
             creatorName: username,
             createdAt: new Date()
@@ -33,56 +41,126 @@ Meteor.methods({
         ListsCollection.remove(listId);
     },
 
-    'lists.addItem'(list, text) {
-        check(text, String);
+    'lists.addItem'(list, item) {
+        check(item.text, String);
 
         if(!this.userId) {
             throw new Meteor.Error("Not authorized");
         }
        
-        if(!list.items) {
-            list.items = []
+        //check list type
+        //based on list type, do corresponding action
+
+        let newItem = {};
+
+        const createGroceryObj = () => {
+            check(item.quantity, Number);
+            check(item.name, String);
+    
+            newItem = {
+                name: item.name,
+                quantity: item.quantity,
+                retrieved: false
+            }
         }
 
-
-
-        const item = {
-            text,
-            isComplete: false,
-            createdAt: new Date()
+        const createTaskObj = () => {
+            check(item.title, String);
+            check(item.description, String);
+            check(item.isComplete, Boolean);
+            
+            newItem = {
+                title: item.title,
+            }
+        }
+        
+        const createAppointmentObj = () => {
+            check(item.title, String);
+            check(item.details, String);
+            check(item.location, String);
+       
+            newItem = {
+                title: item.title,
+                details: item.details,
+                location: item.location,
+                contactInfo: item.contactInfo,
+                start: item.start,
+                end: item.end
+            }
         }
 
-        item._id = new Mongo.ObjectID()
+        newItem._id = new Mongo.ObjectID()
+        newItem.createdAt = new Date()
 
-        list.items.push(item);
+        if(list.type === "shoppingList") {
+            createGroceryObj()
+            list.shoppingList.push(newItem);
+            ListsCollection.update(list._id, {
+                $set: {
+                    shoppingList: list.shoppingList
+                }
+            })
+        
+        } else if (list.type=== "taskList"){
+            createTaskObj()
+            list.taskList.push(newItem)
+            ListsCollection.update(list._id, {
+                $set: {
+                    tasks: list.taskList
+                }
+            })
+        } else if (list.type === "appointmentList") {
+            createAppointmentObj()
+            list.appointmentList.push(newItem)
+            ListsCollection.update(list._id, {
+                $set: {
+                    appointments: list.appointmentList
+                }
+            })
+        }
+    },
 
-        ListsCollection.update(list._id, {
-            $set: {
-                items: list.items
+    'lists.toggleTaskCompleted'(list, task) {
+        if(!task){
+            return
+        }
+
+        list.taskList.forEach(val => {
+            if(val._id.toString() === task._id.toString()){
+                val.isComplete = !val.isComplete
             }
         });
     },
 
-    'lists.toggleComplete'(list, item) {
+
+
+    'lists.toggleItemRetrieved'(list, item) {
         if(!item){
             return
         }
 
-        list.items.forEach(val => {
+        list.shoppingList.forEach(val => {
             if(val._id.toString() === item._id.toString()){
-                val.isComplete = !val.isComplete
-                console.log("match!")
+                val.retrieved = !val.retrieved
             }
-
-            
         });
+    },
 
+    
+    'lists.removeItem'(list, item) {
+        if(!item){
+            return
+        }
 
+        list[list.type].filter(val => val._id.toString() !== item._id.toString());
 
         ListsCollection.update(list._id, {
-            $set: {items: list.items}
+            $set: {
+                [list.type]: list[list.type]
+            }
         })
     },
+
 
     'lists.share'(list, shareRequest) {
         check(shareRequest, String);
@@ -176,11 +254,79 @@ Meteor.methods({
         })
     },
 
+
+
+
+    'lists.updateItem'(list, item, updates) {
+        // title: item.title,
+        // details: item.details,
+        // location: item.location,
+        // contactInfo: item.contactInfo,
+        // start: item.start,
+        // end: item.end
+
+        list[list.type].forEach(val => {
+            if(val._id.toString() === item._id.toString()){
+                val = {...val, ...updates}
+            }
+        })
+
+        ListsCollection.update(list._id, {
+            $set: {
+                [list.type]: list[list.type]
+            }
+        })
+    },
+
+    'lists.hide'(list, username) {
+        if(list.hiddenBy.includes(username)) return
+
+        list.hiddenBy.push(username);
+
+        ListsCollection.update(list._id, {
+            $set: {
+                hiddenBy: list.hiddenBy
+            }
+        })
+    },
+
+    'lists.unhide'(list, username) {
+        if(!list.hiddenBy.includes(username)) return
+        list.hiddenBy.filter(user => user !== username);
+
+        ListsCollection.update(list._id, {
+            $set: {
+                hiddenBy: list.hiddenBy
+            }
+        })
+    },
+
     'lists.remove'(listId) {
         check(listId, String);
         
 
         ListsCollection.remove({_id: listId})
     }
+
+
+    //****only allowed by user and those who the list is shared with****
+
+    //**DONE, AWAITING TESTING**
+    //add shopping list item 
+    //check off shopping list item
+    //add task
+    //check off task
+    //add appointment
+    //delete shopping list item
+    //delete task
+    //remove appointment
+    //hide list
+    //unhide list
+
+
+
+    //**NOT DONE YET */
+
+  
 })
 

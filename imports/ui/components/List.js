@@ -17,32 +17,33 @@ const List = ({ id }) => {
 
 
     return (
-        <Card className="effect5 p-4">
-            {currentList &&
-                <Col>
+        <>
+            <Row>
+                <Col md={{ span: 4 }} className="pr-0">
+                    <h2>{currentList.name}</h2>
+                </Col>
 
-                    <Row>
-                        <Col md={{ span: 4 }} className="pr-0">
-                            <h2>{currentList.name}</h2>
-                        </Col>
-
-                        <Col md={{ span: 8 }}>
-                            <AddUser />
-                        </Col>
-                    </Row>
-
-
+                <Col md={{ span: 8 }}>
+                    <AddUser />
+                </Col>
+            </Row>
+            <Card className="list--checklist effect5 p-4">
+                {currentList &&
                     <Col>
 
-                        <small><em>shared with: {currentList.acceptedShare && currentList.acceptedShare.length && currentList.acceptedShare.map(user => user) || "nobody"}</em></small>
 
-                        {currentList.items && currentList.items.map((item, index) => <p key={index + "index"} className={item.isComplete && "completed"} onClick={() => handleToggleComplete(item)}>{item.text}
-                        </p>)}
-                    </Col>
-                    <ItemForm listId={currentList._id} />
+                        <Col>
 
-                </Col>}
-        </Card >
+                            <small><em>shared with: {currentList.acceptedShare && currentList.acceptedShare.length && currentList.acceptedShare.map(user => user) || "nobody"}</em></small>
+                            <p>{currentList.type}</p>
+                            {/* {currentList.items && currentList.items.map((item, index) => <p key={index + "index"} className={`${item.isComplete && "completed"} item`} onClick={() => handleToggleComplete(item)}>{item.text}
+                            </p>)} */}
+                        </Col>
+                        <ItemForm listId={currentList._id} />
+
+                    </Col>}
+            </Card >
+        </>
     )
 }
 

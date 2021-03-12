@@ -1,28 +1,37 @@
-import React, {useState} from 'react'
-import {ListsCollection} from '../../db/ListsCollection';
+import React, { useState } from 'react'
+import { ListsCollection } from '../../db/ListsCollection';
 
-import {Meteor} from 'meteor/meteor';
+import { Button, Form, Row, Col } from 'react-bootstrap';
 
-const ItemForm = ({listId}) => {
-   
+import { Meteor } from 'meteor/meteor';
+
+const ItemForm = ({ listId }) => {
+
     const [text, setText] = useState("");
 
     const handleSubmit = e => {
         e.preventDefault();
 
-        if(!text) {
+        if (!text) {
             return
         }
-        
-        const list = ListsCollection.findOne({_id: listId});
-       
+
+        const list = ListsCollection.findOne({ _id: listId });
+
         Meteor.call('lists.addItem', list, text);
         setText("");
     }
     return (
         <form onSubmit={handleSubmit}>
-            <input type="text" placeholder="Enter Name of Item"  value={text}m onChange={e => setText(e.target.value)}/>
-            <button type="submit">Add item</button>
+            <Row>
+
+                <Col xs={{ span: 4 }} className="pr-0">
+                    <Form.Control type="text" className="grow" placeholder="Enter username" value={text} onChange={e => setText(e.target.value)} />
+                </Col>
+                <Col xs={{ span: 3 }}>
+                    <Button variant="info" type="submit">Add Item</Button>
+                </Col>
+            </Row>
         </form>
     )
 }
