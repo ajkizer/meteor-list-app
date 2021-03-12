@@ -4,7 +4,7 @@ import {ListsCollection} from '../imports/db/ListsCollection';
 import '../imports/api/listsMethods';
 
 
-const insertList = (name, user) => ListsCollection.insert({ name, userId: user._id, taskList: [], shoppingList: [], appointmentList: [], type:"", sharedWith: [], pendingApproval: [], hiddenBy: [], createdAt: new Date()})
+const insertList = (name, user) => ListsCollection.insert({ name, userId: user._id, taskList: [], shoppingList: [], appointmentList: [], type:"shoppingList", sharedWith: [], pendingApproval: [], hiddenBy: [], createdAt: new Date()})
 
 Meteor.startup(() => {
   if(!Accounts.findUserByUsername('admin')){
@@ -14,6 +14,6 @@ Meteor.startup(() => {
   const user = Accounts.findUserByUsername('admin')
 
   if(ListsCollection.find().count() === 0) {
-    ["Groceries", "Chores", "Notes"].forEach(name => insertList(name, user))
+    ["Groceries"].forEach(name => insertList(name, user))
   }
 });

@@ -6,6 +6,7 @@ import { Card } from 'react-bootstrap';
 import { Link } from 'react-router-dom'
 import { useAccount } from '../hooks/accounts';
 import { useListCount } from '../hooks/lists';
+import ListForm from './ListForm'
 
 const Dashboard = () => {
     const { user, isLoggedIn } = useAccount();
@@ -18,7 +19,7 @@ const Dashboard = () => {
 
     return (
         <div>
-
+            <ListForm/>
             <Card>
                 {myLists.map(list => <Link key={list._id} to={`/dashboard/${list._id}`}>{list.name}</Link>)}
             </Card>

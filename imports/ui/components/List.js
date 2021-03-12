@@ -7,8 +7,6 @@ import { ListsCollection } from '../../db/ListsCollection';
 
 import { Card, Col, Row } from 'react-bootstrap';
 const List = ({ id }) => {
-
-    const user = useTracker(() => Meteor.user())
     const currentList = useTracker(() => ListsCollection.findOne({ _id: id }))
 
 
